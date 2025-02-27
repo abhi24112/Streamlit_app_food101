@@ -5,7 +5,10 @@ import streamlit as st
 import numpy as np 
 import seaborn as sns
 import tensorflow as tf
-from PIL import Image
+from PIL import Image # helps to read images
+
+import requests # this is used for getting image from url
+from io import BytesIO
 
 # Setting page config
 st.set_page_config(page_title="Food Predictor",page_icon=":hamburger:", layout="wide")
@@ -57,7 +60,14 @@ def prediction(image):
 
 st.write("""
 # 🍔 Food Image Prediction (Deep Learning)
-Welcome to the Food Image Predictor! This web app uses a deep learning model (EfficientNetB0) to identify different food items from images. With 81% accuracy, it can classify 101 types of delicious dishes like pizza, sushi, tacos, and more.
+Welcome to the Food Image Predictor! This web app uses a deep learning model (EfficientNetB0) to identify different food items from images. 
+With **81% accuracy**, it can classify 101 types of delicious dishes like pizza, sushi, tacos, and more.
+         
+> This Deep Learning model is trained on the [FOOD101 dataset](https://www.kaggle.com/datasets/dansbecker/food-101)
+         
+> Check the **Code of the model** on my [GitHub](https://github.com/abhi24112/Streamlit_app_food101)
+         
+> My Portfolio : [Abhishek Portfolio](https://abhishek-portfolio-tau.vercel.app/)
 
 ✨ How it works:
 
@@ -66,36 +76,93 @@ Welcome to the Food Image Predictor! This web app uses a deep learning model (Ef
 * You'll get the predicted dish name along with the confidence score.
 * 🍽️ Try it now – Upload a food image and see what the model thinks!""")
 
+
 # file upload
+
+# Upload file from system
 st.write("---")
-st.write('### Choose an image...')
-uploaded_file = st.file_uploader(label="", type=['jpg','jpeg','png'])
+st.write('### :open_file_folder: Choose an image...')
+uploaded_file = st.file_uploader(label="upload image",type=['jpg','jpeg','png'],label_visibility="hidden")
 
 if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    with st.container():
-        left,right = st.columns(2,border=True)
-        with left:
-            st.subheader("Uploaded Image")
-            st.image(image,use_container_width=True)
-        with right:
-            # Show loading GIF
-            with st.spinner("Processing the image...", show_time=True):
-                # Make prediction
-                pred_class, pred_prob = prediction(image)
-                pred_prob = pred_prob * 100
-            st.subheader("Prediction")
-            st.success("Done")
-            st.markdown(f"<h2>Prediction : <span style='color:green'>{pred_class}</span> and <br>Prediction Probability : <span style='color:green'>{pred_prob:.2f}%</span></h2>", unsafe_allow_html=True)
-                
-        st.write("")
+    try: 
+        image = Image.open(uploaded_file)
+        with st.container():
+            left,right = st.columns(2,border=True)
+            with left:
+                st.subheader("Uploaded Image")
+                st.image(image,use_container_width=True)
+            with right:
+                # Show loading GIF
+                with st.spinner("Processing the image...", show_time=True):
+                    # Make prediction
+                    pred_class, pred_prob = prediction(image)
+                    pred_prob = pred_prob * 100
+                st.subheader("Prediction")
+                st.success("Done")
+                st.markdown(f"<h2>Prediction : <span style='color:green'>{pred_class}</span> and <br>Prediction Probability : <span style='color:green'>{pred_prob:.2f}%</span></h2>", unsafe_allow_html=True)
+    except Exception as e:
+        st.error(f"Error loading image: {e}")
 
+# Upload file by url
+
+# Function to load image from url
+def load_image_from_url(url):
+    response = requests.get(url)
+    image = Image.open(BytesIO(response.content))
+    return image
+
+st.write("---")
+st.write('### :sparkles: Choose an image...')
+image_url = st.text_input(label="Enter image URL")
+
+if image_url:
+    try: 
+        image = load_image_from_url(image_url)
+        with st.container():
+            left,right = st.columns(2,border=True)
+            with left:
+                st.subheader("Uploaded Image")
+                st.image(image,use_container_width=True)
+            with right:
+                # Show loading GIF
+                with st.spinner("Processing the image...", show_time=True):
+                    # Make prediction
+                    pred_class, pred_prob = prediction(image)
+                    pred_prob = pred_prob * 100
+                st.subheader("Prediction")
+                st.success("Done")
+                st.markdown(f"<h2>Prediction : <span style='color:green'>{pred_class}</span> and <br>Prediction Probability : <span style='color:green'>{pred_prob:.2f}%</span></h2>", unsafe_allow_html=True)
+    except Exception as e:
+        st.error(f"Error loading image: {e}")
+
+# Upload file from the camera
+st.write("---")
+st.write("### :camera: Use camera to take image")
+with st.container():
+    cam,pred = st.columns(2,border=True)
+    with cam:
+        camera_file = st.camera_input(label="take photo",label_visibility="hidden") # it hide the label
+    with pred:
+        st.write("#### Predictions for Camera Images (Take the image to see the results...)")
+        if camera_file is not None:
+            try:
+                image = Image.open(camera_file)
+                # Show loading gif
+                with st.spinner("Processing the image...", show_time=True):
+                    # Make prediction
+                    pred_class, pred_prob = prediction(image)
+                    pred_prob = pred_prob * 100
+                    st.success("Done")
+                    st.markdown(f"<h2>Prediction : <span style='color:green'>{pred_class}</span> and <br>Prediction Probability : <span style='color:green'>{pred_prob:.2f}%</span></h2>", unsafe_allow_html=True)
+            except Exception as e:
+                st.error(f"Error loading image: {e}")
 
 
 # Intro of Mine
 personal_image = "personal_img.png"
 st.write("---")
-st.header("About Me")
+st.header(" :male-student: About Me")
 with st.container():
     # creating column in the container
     left_column, right_column = st.columns((0.2,0.7),border=True)
