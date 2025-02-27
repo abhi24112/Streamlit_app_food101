@@ -1,8 +1,8 @@
+numpy
 pandas
 matplotlib
-streamlit
-numpy
 seaborn
-tensorflow
 Pillow
+tensorflow
+streamlit
 requests
