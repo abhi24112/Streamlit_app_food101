@@ -62,7 +62,7 @@ st.markdown(
     """
     <meta property="og:title" content="Food Image Prediction (Deep Learning)" />
     <meta property="og:description" content="This web app uses a deep learning model (EfficientNetB0) to identify different food items from images with 81% accuracy." />
-    <meta property="og:image" content="https://example.com/path/to/your/image.jpg" />
+    <meta property="og:image" content="https://raw.githubusercontent.com/abhi24112/Streamlit_app_food101/refs/heads/main/preview_image.png" />
     <meta property="og:url" content="https://food101-prediction.streamlit.app/" />
     <meta name="twitter:card" content="summary_large_image" />
     """,
