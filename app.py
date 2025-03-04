@@ -56,8 +56,21 @@ def prediction(image):
     pred_class = class_names[pred.argmax()]
     return pred_class, pred.max()
 
-# Web app 
+# Meta data of the web app
+# Add Open Graph meta tags
+st.markdown(
+    """
+    <meta property="og:title" content="Food Image Prediction (Deep Learning)" />
+    <meta property="og:description" content="This web app uses a deep learning model (EfficientNetB0) to identify different food items from images with 81% accuracy." />
+    <meta property="og:image" content="https://example.com/path/to/your/image.jpg" />
+    <meta property="og:url" content="https://food101-prediction.streamlit.app/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    """,
+    unsafe_allow_html=True
+)
 
+
+# Web app 
 st.write("""
 # 🍔 Food Image Prediction (Deep Learning)
 Welcome to the Food Image Predictor! This web app uses a deep learning model (EfficientNetB0) to identify different food items from images. 
