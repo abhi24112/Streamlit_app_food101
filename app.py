@@ -181,6 +181,8 @@ if st.session_state.show_camera:
                         st.markdown(f"<h2>Prediction : <span style='color:green'>{pred_class}</span> and <br>Prediction Probability : <span style='color:green'>{pred_prob:.2f}%</span></h2>", unsafe_allow_html=True)
                 except Exception as e:
                     st.error(f"Error loading image: {e}")
+    if st.button("Close Camera"):
+        st.session_state.show_camera = False
 
 # Upload file from the camera
 # st.write("---")
