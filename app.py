@@ -150,27 +150,59 @@ if image_url:
         st.error(f"Error loading image: {e}")
 
 
-# Upload file from the camera
+# Initialize a session state variable to track camera widget visibility
+if "show_camera" not in st.session_state:
+    st.session_state.show_camera = False
+
 st.write("---")
 st.write("### :camera: Use camera to take image")
-with st.container():
-    cam, pred = st.columns(2, border=True)
-    with cam:
-        camera_file = st.camera_input(label="take photo", label_visibility="hidden")  # it hides the label
-    with pred:
-        st.write("#### Predictions for Camera Images (Take the image to see the results...)")
-        if camera_file is not None:
-            try:
-                image = Image.open(camera_file)
-                # Show loading gif
-                with st.spinner("Processing the image...", show_time=True):
-                    # Make prediction
-                    pred_class, pred_prob = prediction(image)
-                    pred_prob = pred_prob * 100
-                    st.success("Done")
-                    st.markdown(f"<h2>Prediction : <span style='color:green'>{pred_class}</span> and <br>Prediction Probability : <span style='color:green'>{pred_prob:.2f}%</span></h2>", unsafe_allow_html=True)
-            except Exception as e:
-                st.error(f"Error loading image: {e}")
+
+# Button to enable camera
+if st.button("Open Camera"):
+    st.session_state.show_camera = True
+
+# Only show camera_input if the user has clicked "Open Camera"
+if st.session_state.show_camera:
+    with st.container():
+        cam, pred = st.columns(2, border=True)
+        with cam:
+            camera_file = st.camera_input(label="take photo", label_visibility="hidden")  # it hides the label
+        with pred:
+            st.write("#### Predictions for Camera Images (Take the image to see the results...)")
+            if camera_file is not None:
+                try:
+                    image = Image.open(camera_file)
+                    # Show loading gif
+                    with st.spinner("Processing the image...", show_time=True):
+                        # Make prediction
+                        pred_class, pred_prob = prediction(image)
+                        pred_prob = pred_prob * 100
+                        st.success("Done")
+                        st.markdown(f"<h2>Prediction : <span style='color:green'>{pred_class}</span> and <br>Prediction Probability : <span style='color:green'>{pred_prob:.2f}%</span></h2>", unsafe_allow_html=True)
+                except Exception as e:
+                    st.error(f"Error loading image: {e}")
+
+# Upload file from the camera
+# st.write("---")
+# st.write("### :camera: Use camera to take image")
+# with st.container():
+#     cam, pred = st.columns(2, border=True)
+#     with cam:
+#         camera_file = st.camera_input(label="take photo", label_visibility="hidden")  # it hides the label
+#     with pred:
+#         st.write("#### Predictions for Camera Images (Take the image to see the results...)")
+#         if camera_file is not None:
+#             try:
+#                 image = Image.open(camera_file)
+#                 # Show loading gif
+#                 with st.spinner("Processing the image...", show_time=True):
+#                     # Make prediction
+#                     pred_class, pred_prob = prediction(image)
+#                     pred_prob = pred_prob * 100
+#                     st.success("Done")
+#                     st.markdown(f"<h2>Prediction : <span style='color:green'>{pred_class}</span> and <br>Prediction Probability : <span style='color:green'>{pred_prob:.2f}%</span></h2>", unsafe_allow_html=True)
+#             except Exception as e:
+#                 st.error(f"Error loading image: {e}")
 
 # Intro of Mine
 personal_image = "personal_img.png"
