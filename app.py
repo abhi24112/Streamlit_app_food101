@@ -5,7 +5,7 @@ import streamlit as st
 import numpy as np 
 import seaborn as sns
 import tensorflow as tf
-from PIL import Image # helps to read images
+from PIL import Image, ImageOps# helps to read images
 
 import requests # this is used for getting image from url
 from io import BytesIO
@@ -126,7 +126,7 @@ def load_image_from_url(url):
     return image
 
 st.write("---")
-st.write('### :sparkles: Choose an image...')
+st.write('### :sparkles: Choose image Using URL...')
 image_url = st.text_input(label="Enter image URL")
 
 if image_url:
@@ -149,13 +149,14 @@ if image_url:
     except Exception as e:
         st.error(f"Error loading image: {e}")
 
+
 # Upload file from the camera
 st.write("---")
 st.write("### :camera: Use camera to take image")
 with st.container():
-    cam,pred = st.columns(2,border=True)
+    cam, pred = st.columns(2, border=True)
     with cam:
-        camera_file = st.camera_input(label="take photo",label_visibility="hidden") # it hide the label
+        camera_file = st.camera_input(label="take photo", label_visibility="hidden")  # it hides the label
     with pred:
         st.write("#### Predictions for Camera Images (Take the image to see the results...)")
         if camera_file is not None:
@@ -170,7 +171,6 @@ with st.container():
                     st.markdown(f"<h2>Prediction : <span style='color:green'>{pred_class}</span> and <br>Prediction Probability : <span style='color:green'>{pred_prob:.2f}%</span></h2>", unsafe_allow_html=True)
             except Exception as e:
                 st.error(f"Error loading image: {e}")
-
 
 # Intro of Mine
 personal_image = "personal_img.png"
